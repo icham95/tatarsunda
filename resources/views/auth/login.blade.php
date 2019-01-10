@@ -3,6 +3,14 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
+        @if (Session::has('user-not-actived'))
+            <div class="col-md-8">
+                <div class="alert alert-success">
+                    <strong>Ooops</strong> {{ __('default.user-not-actived') }}
+                </div>
+            </div>
+        @endif
+
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ __('default.login') }}</div>

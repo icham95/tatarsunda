@@ -142,7 +142,7 @@
                     @foreach ($articles as $article)
                         <div href="#" class="list-group-item flex-column align-items-start">
                             <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">{{ $article->title }}</h5>
+                                <h5 class="mb-1"><a href="{{ route('article', ['id' => $article->id]) }}">{{ $article->title }}</a></h5>
                                 <small> {{ $article->created_at }} </small>
                             </div>
                             <div class="d-flex w-100 justify-content-between">

@@ -275,12 +275,15 @@
                                         <div class="simage">
                                         @php
                                             preg_match('/(<img[^>]+>)/i', $kuliner->content, $matches);
-                                            $img = $matches[1];
-
+                                            if (isset($matches[0])) {
+                                                $img = $matches[0];
+                                            } else {
+                                                $img = null;
+                                            }
                                             if($img) {
                                                 echo $img;
-                                                // else goes here
                                             } else {
+                                                // else goes here
                                             }
                                         @endphp
                                         </div>
@@ -304,8 +307,11 @@
                                         <div class="simage">
                                         @php
                                             preg_match('/(<img[^>]+>)/i', $tokoh->content, $matches);
-                                            $img = $matches[1];
-
+                                            if (isset($matches[0])) {
+                                                $img = $matches[0];
+                                            } else {
+                                                $img = null;
+                                            }
                                             if($img) {
                                                 echo $img;
                                             } else {
@@ -333,8 +339,11 @@
                                         <div class="simage">
                                         @php
                                             preg_match('/(<img[^>]+>)/i', $ai->content, $matches);
-                                            $img = $matches[1];
-
+                                            if (isset($matches[0])) {
+                                                $img = $matches[0];
+                                            } else {
+                                                $img = null;
+                                            }
                                             if($img) {
                                                 echo $img;
                                             } else {
@@ -364,12 +373,15 @@
                                         <div class="simage">
                                         @php
                                             preg_match('/(<img[^>]+>)/i', $pariwisata->content, $matches);
-                                            $img = $matches[1];
-
+                                            if (isset($matches[0])) {
+                                                $img = $matches[0];
+                                            } else {
+                                                $img = null;
+                                            }
                                             if($img) {
                                                 echo $img;
-                                                // else goes here
                                             } else {
+                                                // else goes here
                                             }
                                         @endphp
                                         </div>
@@ -393,8 +405,11 @@
                                         <div class="simage">
                                         @php
                                             preg_match('/(<img[^>]+>)/i', $ij->content, $matches);
-                                            $img = $matches[1];
-
+                                            if (isset($matches[0])) {
+                                                $img = $matches[0];
+                                            } else {
+                                                $img = null;
+                                            }
                                             if($img) {
                                                 echo $img;
                                             } else {
@@ -422,8 +437,11 @@
                                         <div class="simage">
                                         @php
                                             preg_match('/(<img[^>]+>)/i', $du->content, $matches);
-                                            $img = $matches[1];
-
+                                            if (isset($matches[0])) {
+                                                $img = $matches[0];
+                                            } else {
+                                                $img = null;
+                                            }
                                             if($img) {
                                                 echo $img;
                                             } else {
@@ -453,12 +471,15 @@
                                         <div class="simage">
                                         @php
                                             preg_match('/(<img[^>]+>)/i', $meseum->content, $matches);
-                                            $img = $matches[1];
-
+                                            if (isset($matches[0])) {
+                                                $img = $matches[0];
+                                            } else {
+                                                $img = null;
+                                            }
                                             if($img) {
                                                 echo $img;
-                                                // else goes here
                                             } else {
+                                                // else goes here
                                             }
                                         @endphp
                                         </div>
@@ -482,8 +503,11 @@
                                         <div class="simage">
                                         @php
                                             preg_match('/(<img[^>]+>)/i', $sdo->content, $matches);
-                                            $img = $matches[1];
-
+                                            if (isset($matches[0])) {
+                                                $img = $matches[0];
+                                            } else {
+                                                $img = null;
+                                            }
                                             if($img) {
                                                 echo $img;
                                             } else {

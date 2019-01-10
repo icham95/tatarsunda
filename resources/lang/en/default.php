@@ -18,6 +18,6 @@ return [
     'send' => 'Send',
     'draft' => 'Draft',
     'back' => 'Back',
-    'title_example' => 'Enter Title'
+    'title_example' => 'Enter Title',
 
 ];

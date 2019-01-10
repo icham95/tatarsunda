@@ -51,12 +51,16 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/article/update/{id}', 'ArticleController@update')->name('update-article');
     Route::get('/article/destroy/{id}', 'ArticleController@destroy')->name('delete-article');
 
+    Route::get('/user/index', 'UserController@index')->name('index-user');
+    Route::get('/user/{id}/confirmation-yes', 'UserController@confirmation_yes')->name('confirmation-yes-user');
+    Route::get('/user/{id}/confirmation-no', 'UserController@confirmation_no')->name('confirmation-no-user');
     Route::get('/user/{id}/edit', 'UserController@edit')->name('edit-user');
     Route::post('/user/{id}/update', 'UserController@update')->name('update-user');
+    Route::get('/user/{id}/pdf', 'UserController@pdf')->name('pdf-user');
 
 });
 
-Route::get('/home', 'HomeController@index')->name('home')->middleware('admin');
+Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/user/{id}', 'UserController@show')->name('profile-user');
 Route::get('/category/{name}', 'PublicController@page')->name('page-category');

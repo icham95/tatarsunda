@@ -34,7 +34,7 @@ return [
     'title_example' => 'Masukan Judul',
     'indonesia' => 'Indonesia',
     'sunda' => 'Sunda',
-    'lang' => 'Bahasa',
+    'lang' => 'Basa',
     'adat-istiadat' => 'Adat Istiadat',
     'direktori-usaha' => 'Direktori Usaha',
     'info-jabar' => 'Info Jabar',
@@ -49,8 +49,8 @@ return [
     'home' => 'Imah',
     'created_at' => 'Dilakukeun',
     'created_by' => 'Dijien Ku si',
-    'dashboard' => 'Beranda',
-    'article' => 'Article',
+    'dashboard' => 'Imah',
+    'article' => 'Bacaan',
     'category' => 'Kategori',
     'menu' => 'Menu',
     'all' => 'Semua',
@@ -80,6 +80,10 @@ return [
     'role' => 'Pangkat',
     'joined_at' => 'Join Pada',
     'role_member' => 'Anggota',
-    'role_admin' => 'Admin'
+    'role_admin' => 'Admin',
+    'user-not-actived' => 'User can aktif',
+    'yes' => 'sumuhun',
+    'no' => 'ulah',
+    'active' => 'Akfif'
 
 ];

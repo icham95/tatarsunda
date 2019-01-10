@@ -8,4 +8,9 @@ class DetailUser extends Model
 {
     protected $guarded = [];
 
+    public function religion()
+    {
+        return $this->hasOne('App\Models\Religion', 'id', 'religion_id');
+    }
+
 }

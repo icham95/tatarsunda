@@ -50,7 +50,7 @@ return [
     'created_at' => 'Dibuat Pada',
     'created_by' => 'Dibuat Oleh',
     'dashboard' => 'Beranda',
-    'article' => 'Article',
+    'article' => 'Artikel',
     'category' => 'Kategori',
     'menu' => 'Menu',
     'all' => 'Semua',
@@ -80,6 +80,10 @@ return [
     'role' => 'Pangkat',
     'joined_at' => 'Join Pada',
     'role_member' => 'Anggota',
-    'role_admin' => 'Admin'
+    'role_admin' => 'Admin',
+    'user-not-actived' => 'User belum aktif',
+    'yes' => 'ya',
+    'no' => 'tidak',
+    'active' => 'Aktif'
 
 ];

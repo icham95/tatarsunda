@@ -4,18 +4,6 @@
 <div class="container mt-3">
     <div class="row justify-content-center">
         <div class="col-md-8" id="content">
-            <div class="simage mb-5" style="width:100%;">
-            @php
-                preg_match('/(<img[^>]+>)/i', $article->content, $matches);
-                $img = $matches[1];
-
-                if($img) {
-                    echo $img;
-                    // else goes here
-                } else {
-                }
-            @endphp
-            </div>
 
             <h2>{{ $article->title }}</h2>
             <span>{{ __('default.created_at') }} {{ $article->created_at->diffForHumans() }}</span>

@@ -35,7 +35,11 @@
                     {{-- <div class="simage"> --}}
                     @php
                         preg_match('/(<img[^>]+>)/i', $item->content, $matches);
-                        $img = $matches[1];
+                        if (isset($matches[0])) {
+                            $img = $matches[0];
+                        } else {
+                            $img = null;
+                        }
 
                         if($img) {
                             echo $img;

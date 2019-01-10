@@ -55,6 +55,27 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('home') }}">{{ __('default.dashboard') }}</a>
                             </li>
+
+                            @if (auth()->user()->role == 1)
+                                <li class="nav-item dropdown">
+                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                        User <span class="caret"></span>
+                                    </a>
+
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="{{ route('index-user') . '?key=all&sort=desc' }}">
+                                            {{ __('default.all') }}
+                                        </a>
+                                        <a class="dropdown-item" href="{{ route('index-user') . '?key=confirmation&sort=desc' }}">
+                                            {{ __('default.confirmation') }}
+                                        </a>
+                                        <a class="dropdown-item" href="{{ route('index-user') . '?key=active&sort=desc' }}">
+                                            {{ __('default.active') }}
+                                        </a>
+                                    </div>
+                                </li>
+                            @endif
+
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ __('default.article') }} <span class="caret"></span>
@@ -127,6 +148,16 @@
                                 </div>
                             </li>
                             @endif --}}
+                            <li class="nav-item dropdown">
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    {{ __('default.lang') }} <span class="caret"></span>
+                                </a>
+
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ route('locale', ['locale' => 'id']) }}">{{ __('default.indonesia') }}</a>
+                                    <a class="dropdown-item" href="{{ route('locale', ['locale' => 'sunda']) }}">{{ __('default.sunda') }}</a>
+                                </div>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>

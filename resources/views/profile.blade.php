@@ -5,15 +5,27 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">
-                    {{ __('profile') }}
+                <div class="card-header d-flex">
+                    <div class="flex-fill">
+                        {{ __('profile') }}
+                    </div>
+                    <div class="flex-fill text-right">
+                        @if (auth()->user()->id == $user->id)
+                            <a href="{{ route('pdf-user', ['id' => $user->id]) }}"
+                                class="btn btn-primary btn-sm">
+                                PDF
+                            </a>
+                        @endif
+                    </div>
                 </div>
 
                 <div class="card-body">
                     @if (is_null(!auth()->user()))
                         <a href="{{ route('edit-user', ['id' => $user->id]) }}" class="btn btn-primary"> {{ __('edit') }} </a>
                     @endif
-                    <img class="img-fluid mb-3" src="{{ asset('uploads/images/' . $user->detail->avatar) }}" alt="">
+                    <div style="text-align:center;">
+                        <img class="img-fluid mb-3" style="width:200px;" src="{{ asset('uploads/images/' . $user->detail->avatar) }}" alt="">
+                    </div>
                     <div style="text-align:center;">
                         <div class="mb-2">
                             <div><b>{{ __('default.name') }}</b></div>
@@ -38,6 +50,14 @@
                         <div class="mb-2">
                             <div><b>{{ __('default.joined_at') }}</b></div>
                             {{ $user->created_at->diffForHumans() }}
+                        </div>
+                        <div class="mb-2">
+                            <div><b>{{ __('default.active') }}</b></div>
+                            @if ($user->active == 1)
+                                {{ __('default.yes') }}
+                            @else
+                                {{ __('default.no') }}
+                            @endif
                         </div>
                     </div>
                     {{-- <div style="text-align:center;">
