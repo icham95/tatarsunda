@@ -10,12 +10,16 @@
                         {{ __('profile') }}
                     </div>
                     <div class="flex-fill text-right">
-                        @if (auth()->user()->id == $user->id)
-                            <a href="{{ route('pdf-user', ['id' => $user->id]) }}"
-                                class="btn btn-primary btn-sm">
-                                PDF
-                            </a>
-                        @endif
+                        @guest
+
+                        @else
+                            @if (auth()->user()->id == $user->id)
+                                <a href="{{ route('pdf-user', ['id' => $user->id]) }}"
+                                    class="btn btn-primary btn-sm">
+                                    PDF
+                                </a>
+                            @endif
+                        @endguest
                     </div>
                 </div>
 
