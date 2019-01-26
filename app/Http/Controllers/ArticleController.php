@@ -208,6 +208,10 @@ class ArticleController extends Controller
         if(isset($article)) {
             $article->title = $request->title;
             $article->content = $request->content;
+
+            if (auth()->user()->role == 1) {
+                 $article->status = 1;
+            }
             $article->update();
         }
 

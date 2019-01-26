@@ -194,8 +194,11 @@
 
                                 @endif
 
-                                @if ($article->created_by == auth()->user()->id)
+                                @if ($article->created_by == auth()->user()->id || auth()->user()->role == 1)
                                     <a href="{{ route('edit-article', ['id' => $article->id]) }}" class="btn btn-success btn-sm"> {{ __('default.edit') }} </a>
+                                @endif
+
+                                @if ($article->created_by == auth()->user()->id)
                                     <a onclick="deletePrompt(event, '{{$article->title}}', 'r')" href="{{ route('delete-article', ['id' => $article->id]) }}" class="btn btn-danger btn-sm"> {{ __('default.delete') }} </a>
                                 @endif
                             </div>

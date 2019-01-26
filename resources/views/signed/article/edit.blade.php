@@ -36,7 +36,7 @@
                                 <div>
                                     @foreach ($categories as $category)
                                         <div class="form-check form-check-inline">
-                                            <input type="checkbox" name="categories[]" class="form-check-input"
+                                            <input type="radio" name="categories[]" class="form-check-input"
                                             value="{{ $category->id }}" id="check{{ $category->id }}">
                                             <label class="form-check-label" for="check{{ $category->id }}">
                                                 {{ $category->name }}
