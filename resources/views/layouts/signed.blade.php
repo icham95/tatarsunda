@@ -24,6 +24,7 @@
 </head>
 <body>
     <div id="app">
+        @if (!isset($hide_header))
         <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
@@ -194,6 +195,7 @@
                 </div>
             </div>
         </nav>
+        @endif
 
         <main class="py-4">
             @yield('content')

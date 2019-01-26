@@ -38,7 +38,7 @@
                                 <div>
                                     @foreach ($categories as $category)
                                         <div class="form-check form-check-inline">
-                                            <input type="checkbox" name="categories[]" class="form-check-input"
+                                            <input type="radio" name="categories[]" class="form-check-input"
                                             value="{{ $category->id }}" id="check{{ $category->id }}">
                                             <label class="form-check-label" for="check{{ $category->id }}">
                                                 {{ $category->name }}
@@ -47,6 +47,7 @@
                                     @endforeach
                                 </div>
                             </div>
+
                             {{-- <option value="1"> {{ __('default.default.published') }} </option>
                             <option value="2"> {{ __('default.default.confirmation') }} </option>
                             <option value="3"> {{ __('default.default.rejected') }} </option>

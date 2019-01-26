@@ -83,8 +83,10 @@ class UserController extends Controller
         if (is_null($user)) {
             abort(404);
         }
+
+        $hide_header = true;
         $articles = Article::where('created_by', '=', $id)->simplePaginate(5);
-        return view('profile', ['user' => $user, 'articles' => $articles]);
+        return view('profile', ['user' => $user, 'articles' => $articles, 'hide_header' => $hide_header]);
     }
 
     /**
