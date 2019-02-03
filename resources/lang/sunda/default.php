@@ -84,6 +84,8 @@ return [
     'user-not-actived' => 'User can aktif',
     'yes' => 'sumuhun',
     'no' => 'ulah',
-    'active' => 'Akfif'
+    'active' => 'Akfif',
+    'man' => 'Lalaki',
+    'woman' => 'Awewe'
 
 ];

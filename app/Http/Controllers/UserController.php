@@ -162,6 +162,22 @@ class UserController extends Controller
         return redirect()->route('index-user');
     }
 
+    public function onesignal_id(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required'
+        ]);
+
+        $user = $request->user();
+        $user->onesignal_id = $request->id;
+        $user->update();
+
+        return response()->json([
+            'status' => 'ok',
+        ]);
+
+    }
+
     public function pdf($id)
     {
         $user = User::find($id);

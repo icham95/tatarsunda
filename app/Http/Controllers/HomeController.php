@@ -23,6 +23,13 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // \OneSignal::sendNotificationToAll(
+        //     "Some Messages",
+        //     $url = 'https://google.com',
+        //     $data = null,
+        //     $buttons = null,
+        //     $schedule = null
+        // );
         return view('signed.home');
     }
 

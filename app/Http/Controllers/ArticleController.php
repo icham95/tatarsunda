@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\User;
 use App\Models\Category;
 use App\Models\ArticleCategory;
 
@@ -156,6 +157,27 @@ class ArticleController extends Controller
                     ]);
                 }
             }
+
+            if ($status == 4) {
+                // send notif to admin
+                $admins = new User();
+                $admins = $admins->where([
+                    'role' => 1
+                ])->get();
+
+                foreach ($admins as $admin) {
+                    \OneSignal::sendNotificationToUser(
+                        "Artikel Baru Dengan Judul " . $request->title,
+                        $admin->onesignal_id,
+                        $url = \URL::to("/article/edit/" . $article->id),
+                        $data = null,
+                        $buttons = null,
+                        $schedule = null
+                    );
+                }
+
+                event(new \App\Events\UserCreatedArticle($article->id, $article->title));
+            }
         }
 
         return redirect()->route('index-article');
@@ -225,6 +247,33 @@ class ArticleController extends Controller
             }
         }
 
+        if ($article->status == 1) {
+            $user = User::find($article->created_by);
+            \OneSignal::sendNotificationToUser(
+                "Artikel Anda Dengan Judul " . $article->title . ", telah di publish.",
+                $user->onesignal_id,
+                $url = \URL::to("/article/" . $article->id),
+                $data = null,
+                $buttons = null,
+                $schedule = null
+            );
+
+        }
+
+        if ($article->status == 3) {
+            $user = User::find($article->created_by);
+            \OneSignal::sendNotificationToUser(
+                "Artikel Anda Dengan Judul " . $article->title . ", telah di tolak.",
+                $user->onesignal_id,
+                $url = \URL::to("/article/" . $article->id),
+                $data = null,
+                $buttons = null,
+                $schedule = null
+            );
+        }
+
+        event(new \App\Events\AdminConfirmationArticle($article->id, $article->title, $article->created_by, $article->status));
+
         return redirect()->route('index-article');
 
     }
@@ -251,10 +300,30 @@ class ArticleController extends Controller
         $file = $request->file;
         $extension = $file->getClientOriginalExtension();
         $filename = md5($user->id . time()) . '.' . $extension;
+        $name = $file->getClientOriginalName();
         $path = public_path() . '/uploads/images';
-        $upload = $file->move($path, $filename);
+        // $upload = $file->move($path, $filename);
 
-        return json_encode(['location' => $filename]);
+        $img = \Storage::disk('dropbox')->putFileAs('pics', $file, $filename);
+
+        $dropbox = \Storage::disk('dropbox')
+            ->getDriver() // `\League\Flysystem\Flysystem` instance
+            ->getAdapter() // `\Spatie\FlysystemDropbox\DropboxAdapter` instance
+            ->getClient(); // `\Spatie\Dropbox\Client` instance
+
+        // $listSharedLinks = $dropbox->listSharedLinks();
+
+        $img = $dropbox->createSharedLinkWithSettings('pics/' . $filename, [
+            'requested_visibility' => 'public'
+        ]);
+
+        $url = str_replace('dl=0', 'raw=1', $img['url']);
+
+        return json_encode(
+            [
+                'location' => $url
+            ]
+        );
     }
 
     public function publish($id)
@@ -266,6 +335,18 @@ class ArticleController extends Controller
         $article = Article::find($id);
         $article->status = 1;
         $article->update();
+
+        $user = User::find($article->created_by);
+        \OneSignal::sendNotificationToUser(
+            "Artikel Anda Dengan Judul " . $article->title . ", telah di publish.",
+            $user->onesignal_id,
+            $url = \URL::to("/article/" . $article->id),
+            $data = null,
+            $buttons = null,
+            $schedule = null
+        );
+
+        event(new \App\Events\AdminConfirmationArticle($article->id, $article->title, $article->created_by, $article->status));
 
         return redirect(route('index-article') . '?sort=desc&key=confirmation');
     }
@@ -279,6 +360,18 @@ class ArticleController extends Controller
         $article = Article::find($id);
         $article->status = 3;
         $article->update();
+
+        $user = User::find($article->created_by);
+        \OneSignal::sendNotificationToUser(
+            "Artikel Anda Dengan Judul " . $article->title . ", telah di tolak.",
+            $user->onesignal_id,
+            $url = \URL::to("/article/" . $article->id),
+            $data = null,
+            $buttons = null,
+            $schedule = null
+        );
+
+        event(new \App\Events\AdminConfirmationArticle($article->id, $article->title, $article->created_by, $article->status));
 
         return redirect(route('index-article') . '?sort=desc&key=confirmation');
     }

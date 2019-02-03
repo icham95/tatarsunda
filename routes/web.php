@@ -57,6 +57,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/user/{id}/edit', 'UserController@edit')->name('edit-user');
     Route::post('/user/{id}/update', 'UserController@update')->name('update-user');
     Route::get('/user/{id}/pdf', 'UserController@pdf')->name('pdf-user');
+    Route::post('/user/onesignal_id', 'UserController@onesignal_id');
+
 
 });
 
@@ -65,3 +67,18 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/user/{id}', 'UserController@show')->name('profile-user');
 Route::get('/category/{name}', 'PublicController@page')->name('page-category');
 Route::get('/article/{id}', 'PublicController@article')->name('article');
+// Route::post('/test', 'PublicController@upload')->name('upload');
+
+Route::get('test', function () {
+    event(new App\Events\UserCreatedArticle('Someone', 'asd'));
+    event(new App\Events\AdminConfirmationArticle('Someone', 'asd', 4, 1));
+    return "Event has been sent!";
+});
+
+Route::get('send_test_email', function(){
+	Mail::raw('Sending emails with Mailgun and Laravel is easy!', function($message)
+	{
+		$message->subject('Mailgun and Laravel are awesome!');
+		$message->to('icham95@gmail.com');
+	});
+});

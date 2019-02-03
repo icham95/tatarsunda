@@ -103,7 +103,17 @@ class RegisterController extends Controller
         $extension = $file->getClientOriginalExtension();
         $filename = md5($user->id . time()) . '.' . $extension;
         $path = public_path() . '/uploads/images';
-        $upload = $file->move($path, $filename);
+        // $upload = $file->move($path, $filename);
+
+        $img = \Storage::disk('dropbox')->putFileAs('avatars', $file, $filename);
+        $dropbox = \Storage::disk('dropbox')
+            ->getDriver() // `\League\Flysystem\Flysystem` instance
+            ->getAdapter() // `\Spatie\FlysystemDropbox\DropboxAdapter` instance
+            ->getClient(); // `\Spatie\Dropbox\Client` instance
+        $img = $dropbox->createSharedLinkWithSettings('avatars/' . $filename, [
+            'requested_visibility' => 'public'
+        ]);
+        $url = str_replace('dl=0', 'raw=1', $img['url']);
 
         $detailUser = DetailUser::create([
             'no_induk' => $data['no_induk'],
@@ -122,8 +132,25 @@ class RegisterController extends Controller
             'purpose' => $data['purpose'],
             'reference' => $data['reference'],
             'user_id' => $user->id,
-            'avatar' => $filename,
+            'avatar' => $url,
         ]);
+
+        // send notif to admin
+        $admins = new User();
+        $admins = $admins->where([
+            'role' => 1
+        ])->get();
+
+        foreach ($admins as $admin) {
+            \OneSignal::sendNotificationToUser(
+                "User baru bernama " . $data['name'],
+                $admin->onesignal_id,
+                $url = \URL::to("/user/" . $user->id),
+                $data = null,
+                $buttons = null,
+                $schedule = null
+            );
+        }
 
         return $user;
     }

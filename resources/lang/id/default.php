@@ -2,7 +2,7 @@
 
 return [
 
-    'name' => 'Name',
+    'name' => 'Nama',
     'no_induk' => 'No. Induk',
     'date_of_birth' => 'Date Of Birth',
     'location_date_of_birth' => 'Tempat Tanggal Lahir',
@@ -84,6 +84,9 @@ return [
     'user-not-actived' => 'User belum aktif',
     'yes' => 'ya',
     'no' => 'tidak',
-    'active' => 'Aktif'
+    'active' => 'Aktif',
+    'man' => 'Pria',
+    'woman' => 'Wanita',
+    'pkb_example' => 'Provinsi/Kabupaten/Kota'
 
 ];

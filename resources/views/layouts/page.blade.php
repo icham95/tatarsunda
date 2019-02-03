@@ -192,6 +192,54 @@
                 width: 200px;
             }
         </style>
+
+        <link rel="manifest" href="{{ asset('/manifest.json') }}" />
+        {{-- <script src="{{ asset('/OneSignalSDKWorker.js') }}"></script> --}}
+        {{-- <script src="/OneSignalSDKUpdaterWorker.js"></script> --}}
+
+        <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+
+        <script>
+        var OneSignal = window.OneSignal || [];
+        OneSignal.push(function() {
+            OneSignal.init({
+            appId: "dcf7e430-338b-40b7-89e1-a824b1626662",
+            autoRegister: false,
+            notifyButton: {
+                enable: true,
+            },
+            allowLocalhostAsSecureOrigin: true,
+            });
+
+            OneSignal.on('notificationDisplay', function(event) {
+                console.warn('OneSignal notification displayed:', event);
+            });
+
+
+            @auth
+            OneSignal.isPushNotificationsEnabled(function(isEnabled) {
+                if (isEnabled) {
+                    // user has subscribed
+                    OneSignal.getUserId( function(userId) {
+                        // Make a POST call to your server with the user ID
+                        let url = "{{ URL::to('') }}/user/onesignal_id";
+                        let form = new FormData()
+                        form.append('_token', "{{ csrf_token() }}")
+                        form.append('id', userId)
+
+                        fetch(url, {
+                            method: "POST",
+                            body: form
+                        })
+                        .then(res => {
+                            // console.log(res)
+                        })
+                    });
+                }
+            });
+            @endauth
+        });
+        </script>
     </head>
     <body>
 
@@ -265,28 +313,6 @@
 		</div>
 	</section>
     <!-- ./Footer -->
-<script src="{{ asset('js/jquery.min.js') }}"></script>
-<script>
-$(function () {
-    $('a[href="#search"]').on('click', function(event) {
-        event.preventDefault();
-        $('#search').addClass('open');
-        $('#search > form > input[type="search"]').focus();
-    });
 
-    $('#search, #search button.close').on('click keyup', function(event) {
-        if (event.target == this || event.target.className == 'close' || event.keyCode == 27) {
-            $(this).removeClass('open');
-        }
-    });
-
-
-    //Do not include! This prevents the form from submitting for DEMO purposes only!
-    $('form').submit(function(event) {
-        event.preventDefault();
-        return false;
-    })
-});
-</script>
     </body>
 </html>

@@ -21,6 +21,54 @@
 
     @yield('texteditor')
 
+    <link rel="manifest" href="{{ asset('/manifest.json') }}" />
+    {{-- <script src="{{ asset('/OneSignalSDKWorker.js') }}"></script> --}}
+    {{-- <script src="/OneSignalSDKUpdaterWorker.js"></script> --}}
+
+    <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+
+    <script>
+    var OneSignal = window.OneSignal || [];
+    OneSignal.push(function() {
+        OneSignal.init({
+        appId: "dcf7e430-338b-40b7-89e1-a824b1626662",
+        autoRegister: false,
+        notifyButton: {
+            enable: true,
+        },
+        allowLocalhostAsSecureOrigin: true,
+        });
+
+        OneSignal.on('notificationDisplay', function(event) {
+            console.warn('OneSignal notification displayed:', event);
+        });
+
+        @auth
+        OneSignal.isPushNotificationsEnabled(function(isEnabled) {
+            if (isEnabled) {
+                // user has subscribed
+                OneSignal.getUserId( function(userId) {
+                    // console.log('player_id of the subscribed user is : ' + userId);
+                    // Make a POST call to your server with the user ID
+                    let url = "{{ URL::to('') }}/user/onesignal_id";
+                    let form = new FormData()
+                    form.append('_token', "{{ csrf_token() }}")
+                    form.append('id', userId)
+
+                    fetch(url, {
+                        method: "POST",
+                        body: form
+                    })
+                    .then(res => {
+                        // console.log(res)
+                    })
+                });
+            }
+        });
+        @endauth
+    });
+    </script>
+
 </head>
 <body>
     <div id="app">
@@ -119,36 +167,7 @@
                                     </a>
                                 </div>
                             </li>
-                            {{-- @if (Auth::user()->role < 2)
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ __('default.category') }} <span class="caret"></span>
-                                </a>
 
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('index-category') }}">
-                                        {{ __('default.index-category') }}
-                                    </a>
-                                    <a class="dropdown-item" href="{{ route('create-category') }}">
-                                        {{ __('default.create-category') }}
-                                    </a>
-                                </div>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ __('default.menu') }} <span class="caret"></span>
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('index-menu') }}">
-                                        {{ __('default.index-menu') }}
-                                    </a>
-                                    <a class="dropdown-item" href="{{ route('create-menu') }}">
-                                        {{ __('default.create-menu') }}
-                                    </a>
-                                </div>
-                            </li>
-                            @endif --}}
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ __('default.lang') }} <span class="caret"></span>
@@ -159,13 +178,23 @@
                                     <a class="dropdown-item" href="{{ route('locale', ['locale' => 'sunda']) }}">{{ __('default.sunda') }}</a>
                                 </div>
                             </li>
+
+                            <li class="nav-item dropdown" id="notifikasi">
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    Notifikasi <span id="notifikasiNumber">0</span> <span class="caret"></span>
+                                </a>
+
+                                <div id="notifikasiItems" class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                </div>
+                            </li>
+
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown" style="width:100px;">
-                                    <img src="{{ asset('/uploads/images/' . Auth::user()->detail->avatar) }}"
+                                    <img src="{{ Auth::user()->detail->avatar }}"
                                         class="img-fluid mx-auto d-block"
                                         style="height:100px;border-radius:100px;width:100px">
                                     <div style="text-align:center;font-size:11px;">
@@ -204,4 +233,66 @@
 </body>
 
 @yield('texteditor_run')
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="//js.pusher.com/3.1/pusher.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript">
+
+    let notifikasi = document.getElementById('notifikasi')
+    let notifikasiNum = 0;
+
+    var pusher = new Pusher('4b0e34629203c8e2309c', {
+        encrypted: true,
+        cluster: 'ap1'
+    });
+
+    @auth
+        @if (Auth()->user()->role == 1)
+            // Subscribe to the channel we specified in our Laravel Event
+            var channelCreatedArticle = pusher.subscribe('user-created-article');
+
+            // Bind a function to a Event (the full Laravel class)
+            channelCreatedArticle.bind('App\\Events\\UserCreatedArticle', function(data) {
+                let notifikasiNumber = document.getElementById('notifikasiNumber')
+
+                notifikasiNum++;
+                notifikasiNumber.innerHTML = notifikasiNum
+
+                let notifikasiItems = document.getElementById('notifikasiItems')
+                let notifikasiItem = document.createElement('a');
+                notifikasiItem.classList.add('dropdown-item')
+                // edit article
+                notifikasiItem.href = "{{ URL::to('/article/edit') }}/" + data.id
+                notifikasiItem.innerHTML = data.message
+
+                notifikasiItems.appendChild(notifikasiItem)
+
+            });
+        @elseif (Auth()->user()->role != 1)
+            // Subscribe to the channel we specified in our Laravel Event
+            var channelUser = pusher.subscribe('channel_{{ Auth()->user()->id }}');
+
+            // Bind a function to a Event (the full Laravel class)
+            channelUser.bind('App\\Events\\AdminConfirmationArticle', function(data) {
+                let notifikasiNumber = document.getElementById('notifikasiNumber')
+
+                notifikasiNum++;
+                notifikasiNumber.innerHTML = notifikasiNum
+
+                let notifikasiItems = document.getElementById('notifikasiItems')
+                let notifikasiItem = document.createElement('a');
+                notifikasiItem.classList.add('dropdown-item')
+                // edit article
+                notifikasiItem.href = "{{ URL::to('/article') }}/" + data.id
+                notifikasiItem.innerHTML = data.message
+
+                notifikasiItems.appendChild(notifikasiItem)
+            });
+        @endif
+    @endauth
+</script>
+
 </html>
